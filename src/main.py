@@ -136,7 +136,7 @@ class Raycaster:
                 self.draw_line(x, drawStart, x, drawEnd, color)
 
 class Game:
-    def __init__(self):
+    def __init__(self, map_file=None):
         pygame.init()
         self.debug = True
         self.screenWidth = 800
@@ -152,23 +152,30 @@ class Game:
         self.wallColor = (0, 0, 0)
         self.spaceColor = (255, 255, 255)
         self.minimap = pygame.Surface((self.minimapSize, self.minimapSize))
-
-        self.worldMap = [
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
-            [1, 0, 1, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 1, 0, 1, 1, 1, 1, 0, 1],
-            [1, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 1, 0, 1, 0, 1, 1, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        ]
+        if map_file:
+            self.worldMap = self.load_map(map_file)
+        else:
+            self.worldMap = [
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+                [1, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 1, 0, 1, 1, 1, 1, 0, 1],
+                [1, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 1, 0, 1, 0, 1, 1, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            ]
 
         self.player = Player(3.0, 3.0, -1.0, 0.0, 0.0, 0.66, self.worldMap)
         self.raycaster = Raycaster(self.screen, self.worldMap, self.player)
     
+    def load_map(self, map_file):
+        with open(map_file, 'r') as f:
+            map_data = [list(map(int, line.strip())) for line in f.readlines()]
+        return map_data
+
     def render_minimap(self):
         self.minimap.fill((0,0,0))
         for y in range(self.mapHeight):
@@ -225,7 +232,11 @@ class Game:
         self.screen.blit(text_surface, (x, y))
 
 if __name__ == "__main__":
-    game = Game()
+    if len(sys.argv) > 1:
+        map_file = sys.argv[1]
+        game = Game(map_file)
+    else:
+        game = Game()
     game.debug=False
     game.run()
 else:
