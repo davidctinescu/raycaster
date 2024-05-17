@@ -176,10 +176,9 @@ class Game:
                 cell_color = self.wallColor if self.worldMap[y][x] else self.spaceColor
                 pygame.draw.rect(self.minimap, cell_color, (x * self.minimapScale, y * self.minimapScale, self.minimapScale, self.minimapScale))
 
-        # showing the player has some errors pls fix if someone can!!
-        # player_x = max(0, min(int(self.player.posX * self.minimapScale), self.mapWidth * self.minimapScale - 4))
-        # player_y = max(0, min(int(self.player.posY * self.minimapScale), self.mapHeight * self.minimapScale - 4))
-        # pygame.draw.rect(self.minimap, (255, 0, 0), (player_x, player_y, 4, 4))
+        player_x = max(0, min(int(self.player.posX * self.minimapScale), self.mapWidth * self.minimapScale - 4))
+        player_y = max(0, min(int(self.player.posY * self.minimapScale), self.mapHeight * self.minimapScale - 4))
+        pygame.draw.rect(self.minimap, (255, 0, 0), (player_y, player_x, 4, 4))
 
     def run(self):
         isRunning = True
