@@ -1,7 +1,13 @@
-import pygame
+import sys
+import contextlib
 import math
-import time
 import os
+
+"""
+simply: dont show pygame message
+"""
+with contextlib.redirect_stdout(open(os.devnull, 'w')):
+    import pygame
 
 class Player:
     def __init__(self, x, y, dirX, dirY, planeX, planeY, worldMap, fov=60):
@@ -132,6 +138,7 @@ class Raycaster:
 class Game:
     def __init__(self):
         pygame.init()
+        self.debug = True
         self.screenWidth = 800
         self.screenHeight = 600
         self.screen = pygame.display.set_mode((self.screenWidth, self.screenHeight))
@@ -204,10 +211,11 @@ class Game:
             self.raycaster.render()
 
             self.screen.blit(self.minimap, (self.screenWidth - self.minimapSize, 0))
-            self.render_text(f"FPS: {fps}", 10, 10, (255, 255, 255))
-            self.render_text(f"FOV: {self.player.fov}", 10, 40, (255, 255, 255))
-            self.render_text(f"posX: {self.player.posX}", 10, 70, (255, 255, 255))
-            self.render_text(f"posY: {self.player.posY}", 10, 100, (255, 255, 255))
+            if (self.debug == True):
+                self.render_text(f"FPS: {fps}", 10, 10, (255, 255, 255))
+                self.render_text(f"FOV: {self.player.fov}", 10, 40, (255, 255, 255))
+                self.render_text(f"posX: {self.player.posX}", 10, 70, (255, 255, 255))
+                self.render_text(f"posY: {self.player.posY}", 10, 100, (255, 255, 255))
             pygame.display.flip()
 
         pygame.quit()
@@ -219,4 +227,7 @@ class Game:
 
 if __name__ == "__main__":
     game = Game()
+    game.debug=False
     game.run()
+else:
+    print("Raycaster 0.1.0\nAuthor: `windowsbuild3r`\nPlease give credit!")
