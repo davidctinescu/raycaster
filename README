@@ -1,0 +1,12 @@
+penguindoo raycaster engine
+
+a raycaster engine written in pygame 2.5.2 with pypy 3.8 and SDL 2.82
+
+install dependencies:
+pip install -r requirments.txt
+
+font used:
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/ComicShannsMono.zip
+
+or more precisevly..
+Comic Shanns Nerd Font
