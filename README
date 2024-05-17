@@ -10,3 +10,13 @@ https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/ComicShannsMono
 
 or more precisevly..
 Comic Shanns Nerd Font
+
+you can run with:
+python3 src/main.py
+
+or
+python3 src/main.py assets/map.txt
+
+in order to load a custom map
+
+also, to display 'debug' info, modify src/main.py to have Debug=True
