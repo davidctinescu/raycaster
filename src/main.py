@@ -128,12 +128,11 @@ class Raycaster:
                 if drawEnd >= screenHeight:
                     drawEnd = screenHeight - 1
 
-                if side == 0:
-                    color = (216, 191, 216)
+                if self.map[mapX][mapY] == 1:
+                    color = (216, 191, 216) if side == 0 else (221, 160, 221)
+                    self.draw_line(x, drawStart, x, drawEnd, color)
                 else:
-                    color = (221, 160, 221)
-
-                self.draw_line(x, drawStart, x, drawEnd, color)
+                    raise NotImplementedError
 
 class Game:
     def __init__(self, map_file=None):
