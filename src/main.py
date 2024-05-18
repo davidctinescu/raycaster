@@ -143,14 +143,6 @@ class Game:
         self.screen = pygame.display.set_mode((self.screenWidth, self.screenHeight))
         pygame.display.set_caption("penguindoo raycaster engine")
         self.clock = pygame.time.Clock()
-        self.mapWidth = 10
-        self.mapHeight = 10
-        self.tileSize = 64
-        self.minimapSize = 200
-        self.minimapScale = self.minimapSize // self.mapWidth
-        self.wallColor = (0, 0, 0)
-        self.spaceColor = (255, 255, 255)
-        self.minimap = pygame.Surface((self.minimapSize, self.minimapSize))
         if map_file:
             self.worldMap = self.load_map(map_file)
         else:
@@ -166,6 +158,14 @@ class Game:
                 [1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
             ]
+        self.mapWidth = len(self.worldMap[0]) 
+        self.mapHeight = len(self.worldMap)
+        self.tileSize = 64
+        self.minimapSize = 200
+        self.minimapScale = self.minimapSize // self.mapWidth
+        self.wallColor = (0, 0, 0)
+        self.spaceColor = (255, 255, 255)
+        self.minimap = pygame.Surface((self.minimapSize, self.minimapSize))
 
         self.player = Player(3.0, 3.0, -1.0, 0.0, 0.0, 0.66, self.worldMap)
         self.raycaster = Raycaster(self.screen, self.worldMap, self.player)
