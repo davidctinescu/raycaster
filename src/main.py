@@ -10,7 +10,7 @@ with contextlib.redirect_stdout(open(os.devnull, 'w')):
     import pygame
 
 class Player:
-    def __init__(self, x, y, dirX, dirY, planeX, planeY, worldMap, fov=60):
+    def __init__(self, x, y, dirX, dirY, planeX, planeY, worldMap, fov=90):
         self.posX = x
         self.posY = y
         self.dirX = dirX
