@@ -132,7 +132,7 @@ class Raycaster:
                     color = (216, 191, 216) if side == 0 else (221, 160, 221)
                     self.draw_line(x, drawStart, x, drawEnd, color)
                 else:
-                    raise NotImplementedError
+                    raise NotImplementedError("Invalid map!")
 
 class Game:
     def __init__(self, map_file=None):
@@ -140,7 +140,7 @@ class Game:
         self.debug = True
         self.screenWidth = 800
         self.screenHeight = 600
-        self.screen = pygame.display.set_mode((self.screenWidth, self.screenHeight))
+        self.screen = pygame.display.set_mode((self.screenWidth, self.screenHeight), pygame.RESIZABLE)
         pygame.display.set_caption("penguindoo raycaster engine")
         self.clock = pygame.time.Clock()
         if map_file:
@@ -215,7 +215,7 @@ class Game:
             self.render_minimap()
             self.raycaster.render()
 
-            self.screen.blit(self.minimap, (self.screenWidth - self.minimapSize, 0))
+            self.screen.blit(self.minimap, (self.screen.get_width() - self.minimapSize, 0))
             if (self.debug == True):
                 self.render_text(f"FPS: {fps}", 10, 10, (255, 255, 255))
                 self.render_text(f"FOV: {self.player.fov}", 10, 40, (255, 255, 255))

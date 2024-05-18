@@ -21,8 +21,8 @@ map_size = 20
 
 map_2d = generate_map(map_size)
 
-print("Original 1/0 Map:")
+print("place this map in a file:")
 print_map(map_2d)
 
-print("\nVisualized Map:")
+print("\nvisualize it like:")
 print_map(map_2d, visualized=True)
