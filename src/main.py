@@ -41,6 +41,12 @@ class Player:
         elif direction == "BACKWARD":
             newPosX -= self.dirX * moveSpeed
             newPosY -= self.dirY * moveSpeed
+        elif direction == "STRAFE_LEFT":
+            newPosX -= self.planeX * moveSpeed
+            newPosY -= self.planeY * moveSpeed
+        elif direction == "STRAFE_RIGHT":
+            newPosX += self.planeX * moveSpeed
+            newPosY += self.planeY * moveSpeed
         elif direction == "LEFT":
             self.rotate(0.1)
         elif direction == "RIGHT":
@@ -203,8 +209,12 @@ class Game:
             if keys[pygame.K_s]:
                 self.player.move("BACKWARD")
             if keys[pygame.K_a]:
-                self.player.move("LEFT")
+                self.player.move("STRAFE_LEFT")
             if keys[pygame.K_d]:
+                self.player.move("STRAFE_RIGHT")
+            if keys[pygame.K_LEFT]:
+                self.player.move("LEFT")
+            if keys[pygame.K_RIGHT]:
                 self.player.move("RIGHT")
             if keys[pygame.K_q]:
                 self.player.set_fov(self.player.fov - 1)
