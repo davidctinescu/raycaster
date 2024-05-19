@@ -42,11 +42,11 @@ class Player:
             newPosX -= self.dirX * moveSpeed
             newPosY -= self.dirY * moveSpeed
         elif direction == "STRAFE_LEFT":
-            newPosX -= self.planeX * moveSpeed
-            newPosY -= self.planeY * moveSpeed
+            newPosX -= self.planeX * (moveSpeed - 0.05)
+            newPosY -= self.planeY * (moveSpeed - 0.05)
         elif direction == "STRAFE_RIGHT":
-            newPosX += self.planeX * moveSpeed
-            newPosY += self.planeY * moveSpeed
+            newPosX += self.planeX * (moveSpeed - 0.05)
+            newPosY += self.planeY * (moveSpeed - 0.05)
         elif direction == "LEFT":
             self.rotate(0.1)
         elif direction == "RIGHT":
