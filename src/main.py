@@ -2,6 +2,7 @@ import sys
 import contextlib
 import math
 import os
+import time
 
 """
 simply: dont show pygame message
@@ -126,6 +127,12 @@ class Raycaster:
                 else:
                     perpWallDist = (mapY - self.player.posY + (1 - stepY) / 2) / (rayDirY + 1e-10)
 
+                if hit == 1:
+                    if side == 0:
+                        perpWallDist = (mapX - self.player.posX + (1 - stepX) / 2) / (rayDirX + 1e-10)
+                    else:
+                        perpWallDist = (mapY - self.player.posY + (1 - stepY) / 2) / (rayDirY + 1e-10)
+
                 lineHeight = int(screenHeight / (perpWallDist + 1e-10))
                 drawStart = -lineHeight // 2 + screenHeight // 2
                 if drawStart < 0:
@@ -134,8 +141,10 @@ class Raycaster:
                 if drawEnd >= screenHeight:
                     drawEnd = screenHeight - 1
 
+                color_intensity = max(0, 255 - int(perpWallDist * 16))
                 if self.map[mapX][mapY] == 1:
-                    color = (216, 191, 216) if side == 0 else (221, 160, 221)
+                    base_color = (216, 191, 216) if side == 0 else (221, 160, 221)
+                    color = tuple(max(0, min(255, c * color_intensity // 255)) for c in base_color)
                     self.draw_line(x, drawStart, x, drawEnd, color)
                 else:
                     raise NotImplementedError("Invalid map!")
@@ -192,6 +201,63 @@ class Game:
         player_y = max(0, min(int(self.player.posY * self.minimapScale), self.mapHeight * self.minimapScale - 4))
         pygame.draw.rect(self.minimap, (255, 0, 0), (player_y, player_x, 4, 4))
 
+        if self.debug:
+            for x in range(0, self.minimapSize, self.minimapScale):
+                cameraX = 2 * x / float(self.minimapSize) - 1
+                rayDirX = self.player.dirX + self.player.planeX * cameraX
+                rayDirY = self.player.dirY + self.player.planeY * cameraX
+                mapX = int(self.player.posX)
+                mapY = int(self.player.posY)
+
+                deltaDistX = abs(1 / (rayDirX + 1e-10))
+                deltaDistY = abs(1 / (rayDirY + 1e-10))
+
+                if rayDirX < 0:
+                    stepX = -1
+                    sideDistX = (self.player.posX - mapX) * deltaDistX
+                else:
+                    stepX = 1
+                    sideDistX = (mapX + 1.0 - self.player.posX) * deltaDistX
+
+                if rayDirY < 0:
+                    stepY = -1
+                    sideDistY = (self.player.posY - mapY) * deltaDistY
+                else:
+                    stepY = 1
+                    sideDistY = (mapY + 1.0 - self.player.posY) * deltaDistY
+
+                hit = 0
+                while hit == 0:
+                    if sideDistX < sideDistY:
+                        sideDistX += deltaDistX
+                        mapX += stepX
+                        side = 0
+                    else:
+                        sideDistY += deltaDistY
+                        mapY += stepY
+                        side = 1
+
+                    if 0 <= mapX < len(self.worldMap) and 0 <= mapY < len(self.worldMap[0]) and self.worldMap[mapX][mapY] > 0:
+                        hit = 1
+                    elif mapX < 0 or mapX >= len(self.worldMap) or mapY < 0 or mapY >= len(self.worldMap[0]):
+                        break
+
+                if hit == 1:
+                    end_x = int(mapX * self.minimapScale)
+                    end_y = int(mapY * self.minimapScale)
+                    pygame.draw.line(self.minimap, (255, 0, 0), (player_y + 2, player_x + 2), (end_y, end_x), 1)
+
+    def crosshair(self):
+        screenWidth, screenHeight = self.screen.get_size()
+        centerX, centerY = screenWidth // 2, screenHeight // 2
+        length = 6
+        thickness = 3
+        color = (255, 255, 255)
+
+        pygame.draw.line(self.screen, color, (centerX - length, centerY), (centerX + length, centerY), thickness)
+        pygame.draw.line(self.screen, color, (centerX, centerY - length), (centerX, centerY + length), thickness)
+
+
     def run(self):
         isRunning = True
         target_fps = 30
@@ -204,6 +270,9 @@ class Game:
                     isRunning = False
 
             keys = pygame.key.get_pressed()
+            if keys[pygame.K_F3]:
+                time.sleep(0.5)
+                self.debug = not self.debug
             if keys[pygame.K_w]:
                 self.player.move("FORWARD")
             if keys[pygame.K_s]:
@@ -224,13 +293,16 @@ class Game:
             self.screen.fill((0, 0, 0))
             self.render_minimap()
             self.raycaster.render()
+            self.crosshair()
 
             self.screen.blit(self.minimap, (self.screen.get_width() - self.minimapSize, 0))
             if (self.debug == True):
                 self.render_text(f"FPS: {fps}", 10, 10, (255, 255, 255))
                 self.render_text(f"FOV: {self.player.fov}", 10, 40, (255, 255, 255))
-                self.render_text(f"posX: {self.player.posX}", 10, 70, (255, 255, 255))
-                self.render_text(f"posY: {self.player.posY}", 10, 100, (255, 255, 255))
+                self.render_text(f"Position X: {self.player.posX}", 10, 70, (255, 255, 255))
+                self.render_text(f"Position Y: {self.player.posY}", 10, 100, (255, 255, 255))
+                self.render_text(f"Direction X: {self.player.dirX}", 10, 130, (255, 255, 255))
+                self.render_text(f"Direction Y: {self.player.dirY}", 10, 160, (255, 255, 255))
             pygame.display.flip()
 
         pygame.quit()
