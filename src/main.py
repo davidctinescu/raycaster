@@ -260,10 +260,12 @@ class Game:
 
     def run(self):
         isRunning = True
-        target_fps = 30
+        target_fps = 35
         while isRunning:
             self.clock.tick(target_fps)
+            frametimes=int(self.clock.get_rawtime())
             fps = int(self.clock.get_fps())
+            pygame.display.set_caption(f"penguindoo raycaster engine {fps} FPS")
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -298,11 +300,15 @@ class Game:
             self.screen.blit(self.minimap, (self.screen.get_width() - self.minimapSize, 0))
             if (self.debug == True):
                 self.render_text(f"FPS: {fps}", 10, 10, (255, 255, 255))
-                self.render_text(f"FOV: {self.player.fov}", 10, 40, (255, 255, 255))
-                self.render_text(f"Position X: {self.player.posX}", 10, 70, (255, 255, 255))
-                self.render_text(f"Position Y: {self.player.posY}", 10, 100, (255, 255, 255))
-                self.render_text(f"Direction X: {self.player.dirX}", 10, 130, (255, 255, 255))
-                self.render_text(f"Direction Y: {self.player.dirY}", 10, 160, (255, 255, 255))
+                self.render_text(f"Frame Times: {frametimes}ms", 10, 40, (255, 255, 255))
+                self.render_text(f"FOV: {self.player.fov}", 10, 70, (255, 255, 255))
+                self.render_text(f"Position X: {self.player.posX}", 10, 100, (255, 255, 255))
+                self.render_text(f"Position Y: {self.player.posY}", 10, 130, (255, 255, 255))
+                self.render_text(f"Direction X: {self.player.dirX}", 10, 160, (255, 255, 255))
+                self.render_text(f"Direction Y: {self.player.dirY}", 10, 190, (255, 255, 255))
+                self.render_text(f"Python Version: {str(sys.version_info.major) + '.' + str(sys.version_info.minor) + '.' + str(sys.version_info.micro)}", 10, 220, (255, 255, 255))
+            else:
+                self.render_text(f"FPS: {fps}", 10, 10, (255, 255, 255))
             pygame.display.flip()
 
         pygame.quit()
