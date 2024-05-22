@@ -17,7 +17,7 @@ def print_map(map_2d, visualized=False):
         else:
             print("".join(str(cell) for cell in row))
 
-map_size = 20
+map_size = 10
 
 map_2d = generate_map(map_size)
 

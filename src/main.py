@@ -257,7 +257,6 @@ class Game:
         pygame.draw.line(self.screen, color, (centerX - length, centerY), (centerX + length, centerY), thickness)
         pygame.draw.line(self.screen, color, (centerX, centerY - length), (centerX, centerY + length), thickness)
 
-
     def run(self):
         isRunning = True
         target_fps = 35
